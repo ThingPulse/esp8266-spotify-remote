@@ -31,4 +31,4 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
-[!(images/SpotifyDashboard.png)]
+[![Spotify Dashboard](images/SpotifyDashboard.png)]
