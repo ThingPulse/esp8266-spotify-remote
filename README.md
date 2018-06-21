@@ -34,16 +34,16 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
-<img src="/images/SpotifyDashboard.png" width="300">
+<img src="/images/SpotifyDashboard.png" width="500">
 
-![App Sign Up](images/SpotifyAppSignUp1.png)
+<img src="/images/SpotifyAppSignUp1.png" width="500">
 
-![App Sign Up](images/SpotifyppSignUp3.png)
+<img src="/images/SpotifyppSignUp3.png" width="500">
 
-![App Credentials](images/SpotifyCredentials.png)
+<img src="/images/SpotifyCredentials.png" width="500">
 
-![App Sign Save](images/SpotifyAppSettings.png)
+<img src="/images/SpotifyAppSettings.png" width="500">
 
-![App Sign Save](images/SpotifyAppSettingsSave.png)
+<img src="/images/SpotifyAppSettingsSave.png" width="500">
 
-![App Sign Save](images/SpotifyConnectScreen.png)
+<img src="/images/SpotifyConnectScreen.png" width="500">
