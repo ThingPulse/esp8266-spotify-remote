@@ -22,7 +22,7 @@ run this project on your device you will have to setup an application on Spotify
 We developed this project specifically for our [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/). If you apreciate the hard work
 and our willingnes to open-source projects like these please support us by buying our hardware.
 
-[![ESP8266 Color Kit](https://thingpulse.com/wp-content/uploads/2018/01/BoxSmall.jpeg)](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/ | width=300)
+[![ESP8266 Color Kit](https://thingpulse.com/wp-content/uploads/2018/01/BoxSmall.jpeg | width=300)](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/ )
 
 ## Contributions
 
