@@ -31,4 +31,16 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
-[![Spotify Dashboard](images/SpotifyDashboard.png)]
+![Spotify Dashboard](images/SpotifyDashboard.png)
+
+![App Sign Up](images/SpotifyAppSignUp1.png)
+
+![App Sign Up](images/SpotifyppSignUp3.png)
+
+![App Credentials](images/SpotifyCredentials.png)
+
+![App Sign Save](images/SpotifyAppSettings.png)
+
+![App Sign Save](images/SpotifyAppSettingsSave.png)
+
+![App Sign Save](images/SpotifyConnectScreen.png)
