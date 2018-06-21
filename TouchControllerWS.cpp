@@ -52,21 +52,23 @@ bool TouchControllerWS::saveCalibration() {
 void TouchControllerWS::startCalibration(CalibrationCallback *calibrationCallback) {
   state = 0;
   this->calibrationCallback = calibrationCallback;
+  (*calibrationCallback)(10, 10);
+
 }
 
 void TouchControllerWS::continueCalibration() {
     TS_Point p = touchScreen->getPoint();
 
     if (state == 0) {
-      (*calibrationCallback)(10, 10);
+      
       if (touchScreen->touched()) {
         p1 = p;
         state++;
+        (*calibrationCallback)(230, 310);
         lastStateChange = millis();
       }
 
     } else if (state == 1) {
-      (*calibrationCallback)(230, 310);
       if (touchScreen->touched() && (millis() - lastStateChange > 1000)) {
 
         p2 = p;
@@ -76,6 +78,7 @@ void TouchControllerWS::continueCalibration() {
         dy = 320.0 / abs(p1.x - p2.x);
         ax = p1.y < p2.y ? p1.y : p2.y;
         ay = p1.x < p2.x ? p1.x : p2.x;
+        Serial.printf("dx: %f, dy: %f, ax: %f, ay: %f\n", dx, dy, ax, ay);
       }
 
     }

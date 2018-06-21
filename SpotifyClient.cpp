@@ -28,18 +28,16 @@ See more at https://thingpulse.com
 #include <ESPHTTPClient.h>
 #include "SpotifyClient.h"
 
-SpotifyClient::SpotifyClient() {
-
+SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri) {
+  this->clientId = clientId;
+  this->clientSecret = clientSecret;
+  this->redirectUri = redirectUri;
 }
 
 
 uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   this->data = data;
-  //data->title = "";
-  //data->progressMs = 0;
-  //data->durationMs = 0;
-  //data->artistName = "";
-  //data->isPlaying = false;
+
   level = 0;
   isDataCall = true;
   currentParent = "";
@@ -198,7 +196,7 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   return httpCode;
 }
 
-void SpotifyClient::getToken(SpotifyAuth *auth, String clientId, String clientSecret, String redirectUri, String grantType, String code) {
+void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   this->auth = auth;
   isDataCall = false;
   JsonStreamingParser parser;
@@ -268,6 +266,45 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String clientId, String clientSe
   } while(client.connected());
 
   this->data = nullptr;
+}
+
+String SpotifyClient::startConfigPortal() {
+  String oneWayCode = "";
+
+  server.on ( "/", [this]() {
+    Serial.println(this->clientId);
+    Serial.println(this->redirectUri);
+    server.sendHeader("Location", String("https://accounts.spotify.com/authorize/?client_id=" 
+      + this->clientId 
+      + "&response_type=code&redirect_uri=" 
+      + this->redirectUri 
+      + "&scope=user-read-private%20user-read-currently-playing%20user-read-playback-state%20user-modify-playback-state"), true);
+    server.send ( 302, "text/plain", "");
+  } );
+
+  server.on ( "/callback/", [this, &oneWayCode](){
+    if(!server.hasArg("code")) {server.send(500, "text/plain", "BAD ARGS"); return;}
+    
+    oneWayCode = server.arg("code");
+    Serial.printf("Code: %s\n", oneWayCode.c_str());
+  
+    String message = "<html><head></head><body>Succesfully authentiated This device with Spotify. Restart your device now</body></html>";
+  
+    server.send ( 200, "text/html", message );
+  } );
+
+  server.begin();
+
+  boolean connected = WiFi.status() == WL_CONNECTED;
+
+  Serial.println ( "HTTP server started" );
+
+  while(oneWayCode == "") {
+    server.handleClient();
+    yield();
+  }
+  server.stop();
+  return oneWayCode;
 }
 
 void SpotifyClient::whitespace(char c) {
@@ -409,72 +446,72 @@ void SpotifyClient::downloadFile(String url, String filename) {
     // wait for WiFi connection
     boolean isFirstCall = true;
 
-        HTTPClient http;
+    HTTPClient http;
 
-        Serial.print("[HTTP] begin...\n");
+    Serial.print("[HTTP] begin...\n");
 
-        // configure server and url
-        http.begin(url);
+    // configure server and url
+    http.begin(url);
 
-        Serial.print("[HTTP] GET...\n");
-        // start connection and send HTTP header
-        int httpCode = http.GET();
-        if(httpCode > 0) {
-            //SPIFFS.remove(filename);
-            fs::File f = SPIFFS.open(filename, "w+");
-            if (!f) {
-                Serial.println("file open failed");
-                return;
-            }
-            // HTTP header has been send and Server response header has been handled
-            Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-
-            // file found at server
-            if(httpCode == HTTP_CODE_OK) {
-
-                // get lenght of document (is -1 when Server sends no Content-Length header)
-                int total = http.getSize();
-                int len = total;
-                //progressCallback(filename, 0,total, true);
-                // create buffer for read
-                uint8_t buff[128] = { 0 };
-
-                // get tcp stream
-                WiFiClient * stream = http.getStreamPtr();
-
-                // read all data from server
-                long lastDrawingUpdate = 0;
-                while(http.connected() && (len > 0 || len == -1)) {
-                    // get available data size
-                    size_t size = stream->available();
-
-                    if(size) {
-                        // read up to 128 byte
-                        int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
-
-                        // write it to Serial
-                        f.write(buff, c);
-
-                        if(len > 0) {
-                            len -= c;
-                        }
-                        //progressCallback(filename, total - len,total, false);
-                        isFirstCall = false;
-                        executeCallback();
-                    }
-                    delay(1);
-                }
-
-                Serial.println();
-                Serial.print("[HTTP] connection closed or file end.\n");
-
-            }
-            f.close();
-        } else {
-            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    Serial.print("[HTTP] GET...\n");
+    // start connection and send HTTP header
+    int httpCode = http.GET();
+    if(httpCode > 0) {
+        //SPIFFS.remove(filename);
+        fs::File f = SPIFFS.open(filename, "w+");
+        if (!f) {
+            Serial.println("file open failed");
+            return;
         }
-        
-        http.end();
+        // HTTP header has been send and Server response header has been handled
+        Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+
+        // file found at server
+        if(httpCode == HTTP_CODE_OK) {
+
+            // get lenght of document (is -1 when Server sends no Content-Length header)
+            int total = http.getSize();
+            int len = total;
+            //progressCallback(filename, 0,total, true);
+            // create buffer for read
+            uint8_t buff[128] = { 0 };
+
+            // get tcp stream
+            WiFiClient * stream = http.getStreamPtr();
+
+            // read all data from server
+            long lastDrawingUpdate = 0;
+            while(http.connected() && (len > 0 || len == -1)) {
+                // get available data size
+                size_t size = stream->available();
+
+                if(size) {
+                    // read up to 128 byte
+                    int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+
+                    // write it to Serial
+                    f.write(buff, c);
+
+                    if(len > 0) {
+                        len -= c;
+                    }
+                    //progressCallback(filename, total - len,total, false);
+                    isFirstCall = false;
+                    executeCallback();
+                }
+                delay(1);
+            }
+
+            Serial.println();
+            Serial.print("[HTTP] connection closed or file end.\n");
+
+        }
+        f.close();
+    } else {
+        Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    
+    http.end();
     
 }
 

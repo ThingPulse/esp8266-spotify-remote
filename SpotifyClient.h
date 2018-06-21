@@ -27,6 +27,7 @@ See more at https://thingpulse.com
 #include <Arduino.h>
 #include <JsonListener.h>
 #include <JsonStreamingParser.h>
+#include <ESP8266WebServer.h>
 #include <FS.h>
 #include <base64.h>
 
@@ -139,23 +140,29 @@ class SpotifyClient: public JsonListener {
   uint8_t level = 0;
   uint16_t currentImageHeight;
   DrawingCallback *drawingCallback;
+  String clientId;
+  String clientSecret;
+  String redirectUri;
+  ESP8266WebServer server;
 
   String getRootPath();
   void executeCallback();
 
   public:
-    SpotifyClient();
+    SpotifyClient(String clientId, String clientSecret, String redirectUri);
     uint16_t update(SpotifyData *data, SpotifyAuth *auth);
 
     uint16_t playerCommand(SpotifyAuth *auth, String method, String command);
 
-    void getToken(SpotifyAuth *auth, String clientId, String clientSecret, String redirectUri, String grantType, String code);
+    void getToken(SpotifyAuth *auth, String grantType, String code);
 
     void downloadFile(String url, String filename);
 
     void setDrawingCallback(DrawingCallback *drawingCallback) {
       this->drawingCallback = drawingCallback;
     }
+
+    String startConfigPortal();
 
 
 
