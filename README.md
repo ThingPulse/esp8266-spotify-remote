@@ -26,6 +26,6 @@ and our willingnes to open-source projects like these please support us by buyin
 
 ## Contributions
 
-Please see (Contributing.md) if you want to contribute to this project. Contributions are more than welcome!
+Please see [Contributing](Contributing.md) if you want to contribute to this project. Contributions are more than welcome!
 
 
