@@ -34,7 +34,7 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
-![Spotify Dashboard](images/SpotifyDashboard.png| width=300)
+<img src="/ThingPulse/esp8266-spotify-remote/raw/master/images/SpotifyDashboard.png" width="300">
 
 ![App Sign Up](images/SpotifyAppSignUp1.png)
 
