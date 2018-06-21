@@ -29,3 +29,6 @@ and our willingnes to open-source projects like these please support us by buyin
 Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this project. Contributions are more than welcome!
 
 
+## Setup Instructions
+
+[!(images/SpotifyDashboard.png)]
