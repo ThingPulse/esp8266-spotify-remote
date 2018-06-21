@@ -31,7 +31,7 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
-![Spotify Dashboard](images/SpotifyDashboard.png)
+![Spotify Dashboard](images/SpotifyDashboard.png| width=300)
 
 ![App Sign Up](images/SpotifyAppSignUp1.png)
 
