@@ -49,21 +49,21 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 1. Go to (https://developer.spotify.com/dashboard/login) and login to the Spotify Developer Dashboard
 
 2. Click on "My New App" 
-<img src="/images/SpotifyDashboard.png" width="500">
+<img src="/images/SpotifyDashboard.png" width="200">
 
 3. Fill out the form. Give your new app a name you can attribute to this project <img src="/images/SpotifyAppSignUp1.png" width="500">
 
 4. In the end of the 3 steps click on "Submit" 
-<img src="/images/SpotifyppSignUp3.png" width="500">
+<img src="/images/SpotifyppSignUp3.png" width="200">
 
 5. Copy the Client ID and the Client Secret into the variables in the settings.h
-<img src="/images/SpotifyCredentials.png" width="500">
+<img src="/images/SpotifyCredentials.png" width="200">
 
 6. Click on "Edit Settings". Add "http://esp8266.local/callback/" to Redirect URIs section
-<img src="/images/SpotifyAppSettings.png" width="500">
+<img src="/images/SpotifyAppSettings.png" width="200">
 
 7. Don't forget to save your settings.
-<img src="/images/SpotifyAppSettingsSave.png" width="500">
+<img src="/images/SpotifyAppSettingsSave.png" width="200">
 
 
 ### Compile and run the application
@@ -75,7 +75,7 @@ After all this configuration it's about time to run the application!
 2. Upload the code to your ESP8266
 
 3. When you run this the first time you'll have to go through additional steps. The display will ask you to open the browser at a specific location. This will redirect you to the dialog below.
-<img src="/images/SpotifyConnectScreen.png" width="500">
+<img src="/images/SpotifyConnectScreen.png" width="200">
 
 4. The next step is to calibrate the screen. Click on the white circles
 
