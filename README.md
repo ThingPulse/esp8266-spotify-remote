@@ -51,7 +51,8 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 2. Click on "My New App" 
 <img src="/images/SpotifyDashboard.png" width="200">
 
-3. Fill out the form. Give your new app a name you can attribute to this project <img src="/images/SpotifyAppSignUp1.png" width="200">
+3. Fill out the form. Give your new app a name you can attribute to this project 
+<img src="/images/SpotifyAppSignUp1.png" width="200">
 
 4. In the end of the 3 steps click on "Submit" 
 <img src="/images/SpotifyppSignUp3.png" width="200">
