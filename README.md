@@ -34,8 +34,10 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
+1. Go to (https://developer.spotify.com/dashboard/login) and login to the Spotify Developer Dashboard
+1. Click on "My New App"
 <img src="/images/SpotifyDashboard.png" width="500">
-
+1. Fill out the form. Give your new app a name you can attribute to this project
 <img src="/images/SpotifyAppSignUp1.png" width="500">
 
 <img src="/images/SpotifyppSignUp3.png" width="500">
