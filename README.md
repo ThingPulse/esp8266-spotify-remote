@@ -57,9 +57,12 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 5. Copy the Client ID and the Client Secret into the variables in the settings.h
 <img src="/images/SpotifyCredentials.png" width="500">
 
-6. Click on "Edit Settings" 
+6. Click on "Edit Settings". Add "http://esp8266.local/callback/" to Redirect URIs section
 <img src="/images/SpotifyAppSettings.png" width="500">
 
-7. Add "http://esp8266.local/callback/" to Redirect URIs section<img src="/images/SpotifyAppSettingsSave.png" width="500">
+7. Don't forget to save your settings.
+<img src="/images/SpotifyAppSettingsSave.png" width="500">
 
-9. <img src="/images/SpotifyConnectScreen.png" width="500">
+### Compile and run the application
+
+<img src="/images/SpotifyConnectScreen.png" width="500">
