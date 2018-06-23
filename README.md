@@ -52,7 +52,8 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 3. Fill out the form. Give your new app a name you can attribute to this project <img src="/images/SpotifyAppSignUp1.png" width="500">
 
-4. In the end of the 3 steps click on "Submit" <img src="/images/SpotifyppSignUp3.png" width="500">
+4. In the end of the 3 steps click on "Submit" 
+<img src="/images/SpotifyppSignUp3.png" width="500">
 
 5. Copy the Client ID and the Client Secret into the variables in the settings.h
 <img src="/images/SpotifyCredentials.png" width="500">
@@ -62,6 +63,7 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 7. Don't forget to save your settings.
 <img src="/images/SpotifyAppSettingsSave.png" width="500">
+
 
 ### Compile and run the application
 
