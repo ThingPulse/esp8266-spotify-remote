@@ -34,15 +34,32 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ## Setup Instructions
 
+### Prepare Project in Arduino IDE
+
 1. Download this project either as ZIP file or check it out with GIT
-1. Open the project in the Arduino IDE
+2. Open the project in the Arduino IDE
+3. Install the MiniGrafx library (by Daniel Eichhorn, V 1.0.0 or later)
+4. Install the JPEGDecoder library (by Bodmer, Makoto Kurauchi, Rich Geldreich, V 1.7.8 or later)
+5. Install the JSON Streaming Parser library (by Daniel Eichhorn, V. 1.0.5 or later)
+6. Install the XPT2046_Touchscreen (by Paul Stoffregen, V 1.2.0 or later)
+
+### Get Access to the Spotify API
+
 1. Go to (https://developer.spotify.com/dashboard/login) and login to the Spotify Developer Dashboard
-1. Click on "My New App" <img src="/images/SpotifyDashboard.png" width="500">
-1. Fill out the form. Give your new app a name you can attribute to this project <img src="/images/SpotifyAppSignUp1.png" width="500">
-1. In the end of the 3 steps click on "Submit" <img src="/images/SpotifyppSignUp3.png" width="500">
-1. <img src="/images/SpotifyCredentials.png" width="500">
-1. <img src="/images/SpotifyAppSettings.png" width="500">
 
-<img src="/images/SpotifyAppSettingsSave.png" width="500">
+2. Click on "My New App" 
+<img src="/images/SpotifyDashboard.png" width="500">
 
-<img src="/images/SpotifyConnectScreen.png" width="500">
+3. Fill out the form. Give your new app a name you can attribute to this project <img src="/images/SpotifyAppSignUp1.png" width="500">
+
+4. In the end of the 3 steps click on "Submit" <img src="/images/SpotifyppSignUp3.png" width="500">
+
+5. Copy the Client ID and the Client Secret into the variables in the settings.h
+<img src="/images/SpotifyCredentials.png" width="500">
+
+6. Click on "Edit Settings" 
+<img src="/images/SpotifyAppSettings.png" width="500">
+
+7. Add "http://esp8266.local/callback/" to Redirect URIs section<img src="/images/SpotifyAppSettingsSave.png" width="500">
+
+9. <img src="/images/SpotifyConnectScreen.png" width="500">
