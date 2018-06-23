@@ -38,6 +38,7 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 1. Download this project either as ZIP file or check it out with GIT
 2. Open the project in the Arduino IDE
+3. Set your WiFi credentials in the settings.h file
 3. Install the MiniGrafx library (by Daniel Eichhorn, V 1.0.0 or later)
 4. Install the JPEGDecoder library (by Bodmer, Makoto Kurauchi, Rich Geldreich, V 1.7.8 or later)
 5. Install the JSON Streaming Parser library (by Daniel Eichhorn, V. 1.0.5 or later)
@@ -67,4 +68,15 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 
 ### Compile and run the application
 
+After all this configuration it's about time to run the application! 
+
+1. Attach your [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/) to your computer and select the correct serial port in the Arduino IDE
+
+2. Upload the code to your ESP8266
+
+3. When you run this the first time you'll have to go through additional steps. The display will ask you to open the browser at a specific location. This will redirect you to the dialog below.
 <img src="/images/SpotifyConnectScreen.png" width="500">
+
+4. The next step is to calibrate the screen. Click on the white circles
+
+5. Now open your spotify player and start a song. If everything worked out you'll see the song information with artwork on the TFT screen!
