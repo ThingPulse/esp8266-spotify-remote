@@ -193,6 +193,13 @@ void loop() {
         }
  
       }
+      if (responseCode == 400) {
+        gfx.fillBuffer(MINI_BLACK);
+        gfx.setColor(MINI_WHITE);
+        gfx.setTextAlignment(TEXT_ALIGN_CENTER);
+        gfx.drawString(120, 20, "Please define\nclientId and clientSecret");
+        gfx.commit(0,160);
+      }
 
     }
     drawSongInfo();
