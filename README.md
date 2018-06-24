@@ -17,6 +17,8 @@ run this project on your device you will have to setup an application on Spotify
  - Control Player on touch screen: Play, Pause, Next, Prev
  - Authentication and Authorization (OAuth 2.0 flow) On device.
 
+ [![Demo Video](https://img.youtube.com/vi/xKmXMUoo8ps/0.jpg)](https://www.youtube.com/watch?v=xKmXMUoo8ps)
+
 ## Recommended Hardware
 
 We developed this project specifically for our [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/). If you appreciate the hard work and our willingness to open-source projects like this one then please support us by buying our hardware.
