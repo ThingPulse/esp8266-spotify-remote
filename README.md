@@ -46,7 +46,7 @@ The below instructions assume that your Arduino IDE is properly setup to work wi
 1. Open the project in the Arduino IDE.
 1. Install the required Arduino libraries. Go to Sketch > Include Library... > Manage Libraries.... Then, for each library, put its name into the text field to have its metadata pulled from the internet and displayed below. Select the latest version and install it.
 	1. [Mini Grafx](https://www.arduinolibraries.info/libraries/mini-grafx) library (by Daniel Eichhorn, V 1.0.0 or later)
-	1. [JPEGDecoder](https://www.arduinolibraries.info/libraries/jpeg-decoder) library (by Bodmer, Makoto Kurauchi, Rich Geldreich, v1.7.8 or later). After installing the library, please go to the folder 'Arduino/libraries/JPEGDecoder' and open the file 'User_config.h'. Uncomment line 5 so that you'll get: //#define LOAD_SD_LIBRARY
+	1. [JPEGDecoder](https://www.arduinolibraries.info/libraries/jpeg-decoder) library (by Bodmer, Makoto Kurauchi, Rich Geldreich, v1.7.8 or later). After installing the library go to your Arduino sketchbook folder (the one configured in Arduino Preferences > Sketchbook location). In that folder open file `libraries/JPEGDecoder/src/User_config.h` and comment line 5 so that it reads `//#define LOAD_SD_LIBRARY`.
 	1. [JSON Streaming Parser](https://www.arduinolibraries.info/libraries/json-streaming-parser) library (by Daniel Eichhorn, v1.0.5 or later)
 	1. [XPT2046_Touchscreen](https://www.arduinolibraries.info/libraries/xpt2046_touchscreen) (by Paul Stoffregen, v1.2.0 or later)
 1. Set your *WiFi credentials* in the `settings.h` file
