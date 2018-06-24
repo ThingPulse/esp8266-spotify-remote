@@ -6,7 +6,7 @@
 
 This project lets you control a Spotify player (phone, browser, etc) from an ESP8266. Album artworks as well as title and artist name
 are fetched from Spotify's Web API over WiFi and displayed on a ILI9341 color TFT screen. The currently played song can be
-paused, played and skipped to the next or previous song in the playlist. 
+paused, played and skipped to the next or previous song in the playlist.
 
 A full OAuth 2.0 web flow is used to acquire the necessary access and refresh tokens to permit the user to control the player. In order to
 run this project on your device you will have to setup an application on Spotify's developer dashboard.
@@ -15,7 +15,7 @@ run this project on your device you will have to setup an application on Spotify
 
  - Artwork Download
  - Control Player on touch screen: Play, Pause, Next, Prev
- - Authentication and Authorization (OAuth 2.0 flow) On device. 
+ - Authentication and Authorization (OAuth 2.0 flow) On device.
 
 ## Recommended Hardware
 
@@ -43,7 +43,7 @@ The below instructions assume that your Arduino IDE is properly setup to work wi
 1. Open the project in the Arduino IDE.
 1. Install the required Arduino libraries. Go to Sketch > Include Library... > Manage Libraries.... Then, for each library, put its name into the text field to have its metadata pulled from the internet and displayed below. Select the latest version and install it.
 	1. [Mini Grafx](https://www.arduinolibraries.info/libraries/mini-grafx) library (by Daniel Eichhorn, V 1.0.0 or later)
-	1. [JPEGDecoder](https://www.arduinolibraries.info/libraries/jpeg-decoder) library (by Bodmer, Makoto Kurauchi, Rich Geldreich, v1.7.8 or later)
+	1. [JPEGDecoder](https://www.arduinolibraries.info/libraries/jpeg-decoder) library (by Bodmer, Makoto Kurauchi, Rich Geldreich, v1.7.8 or later). After installing the library, please go to the folder 'Arduino/libraries/JPEGDecoder' and open the file 'User_config.h'. Uncomment line 5 so that you'll get: //#define LOAD_SD_LIBRARY
 	1. [JSON Streaming Parser](https://www.arduinolibraries.info/libraries/json-streaming-parser) library (by Daniel Eichhorn, v1.0.5 or later)
 	1. [XPT2046_Touchscreen](https://www.arduinolibraries.info/libraries/xpt2046_touchscreen) (by Paul Stoffregen, v1.2.0 or later)
 1. Set your *WiFi credentials* in the `settings.h` file
@@ -53,19 +53,19 @@ The below instructions assume that your Arduino IDE is properly setup to work wi
 
 1. Go to [https://developer.spotify.com/dashboard/login](https://developer.spotify.com/dashboard/login) and login to or sign up for the Spotify Developer Dashboard
 
-2. Click on "My New App" 
+2. Click on "My New App"
 <img src="./images/SpotifyDashboard.png" width="400">
 
-3. Fill out the form. Give your new app a name you can attribute to this project. It's safe to select "I don't know" for the type of application. 
+3. Fill out the form. Give your new app a name you can attribute to this project. It's safe to select "I don't know" for the type of application.
 <img src="./images/SpotifyAppSignUp1.png" width="400">
 
-4. At the end of the 3 steps click "Submit" 
+4. At the end of the 3 steps click "Submit"
 <img src="./images/SpotifyppSignUp3.png" width="400">
 
 5. Set the unique Client ID and Client Secret as values for the respective variables in `settings.h`
 <img src="./images/SpotifyCredentials.png" width="400">
 
-6. Click on "Edit Settings". Add "http://esp8266.local/callback/" to the Redirect URIs section. 
+6. Click on "Edit Settings". Add "http://esp8266.local/callback/" to the Redirect URIs section.
 
    **NOTE** If you're running more than ThingPulse Spotify Remote in the same WiFi network you should choose a unique name rather than "esp8266". Regardless of what you choose it has to reflect what you set as `espotifierNodeName` in `settings.h`
 <img src="./images/SpotifyAppSettings.png" width="400">
@@ -75,7 +75,7 @@ The below instructions assume that your Arduino IDE is properly setup to work wi
 
 ### Compile and run the application
 
-After all this configuration it's about time to run the application! 
+After all this configuration it's about time to run the application!
 
 1. First check the configuration in `settings.h` one more time to ensure the Spotify values match those set on the Spotify Developer Dashboard. Better safe than sorry, they say.
 
