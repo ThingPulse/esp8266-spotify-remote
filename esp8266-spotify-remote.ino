@@ -19,7 +19,6 @@ See more at https://thingpulse.com
 */
 
 #include <ESP8266WiFi.h>
-#include <WiFiClientSecure.h>
 #include <MiniGrafx.h>
 #include <ILI9341_SPI.h>
 #include <FS.h>
