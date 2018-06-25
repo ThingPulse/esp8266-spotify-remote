@@ -39,10 +39,19 @@ Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this p
 1. Download this project either as ZIP file or check it out with GIT
 2. Open the project in the Arduino IDE
 3. Set your WiFi credentials in the settings.h file
-3. Install the MiniGrafx library (by Daniel Eichhorn, V 1.0.0 or later)
+3. Install the Mini Grafx library (by Daniel Eichhorn, V 1.0.0 or later)
 4. Install the JPEGDecoder library (by Bodmer, Makoto Kurauchi, Rich Geldreich, V 1.7.8 or later)
 5. Install the JSON Streaming Parser library (by Daniel Eichhorn, V. 1.0.5 or later)
 6. Install the XPT2046_Touchscreen (by Paul Stoffregen, V 1.2.0 or later)
+
+### Optional: PrFetch libaries from git:
+
+https://github.com/ThingPulse/minigrafx
+https://github.com/Bodmer/JPEGDecoder
+https://github.com/PaulStoffregen/XPT2046_Touchscreen
+
+
+
 
 ### Get Access to the Spotify API
 
