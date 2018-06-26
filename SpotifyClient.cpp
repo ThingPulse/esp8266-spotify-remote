@@ -25,6 +25,10 @@
 #include <ESP8266HTTPClient.h>
 #include "SpotifyClient.h"
 
+#define min(X, Y) (((X)<(Y))?(X):(Y))
+
+
+
 SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri) {
   this->clientId = clientId;
   this->clientSecret = clientSecret;
@@ -71,15 +75,13 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   }
   uint16_t bufLen = 1024;
   unsigned char buf[bufLen];
-  int pos = 0;
   boolean isBody = false;
-  char c;
+  char c = ' ';
 
   int size = 0;
   client.setNoDelay(false);
   // while(client.connected()) {
   uint16_t httpCode = 0;
-  uint64_t lastUpdate = millis();
   do {
     while((size = client.available()) > 0) {
    
@@ -157,9 +159,8 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   }
   uint16_t bufLen = 1024;
   unsigned char buf[bufLen];
-  int pos = 0;
   boolean isBody = false;
-  char c;
+  char c = ' ';
 
   int size = 0;
   client.setNoDelay(false);
@@ -293,6 +294,13 @@ String SpotifyClient::startConfigPortal() {
   server.begin();
 
   boolean connected = WiFi.status() == WL_CONNECTED;
+  if (connected) {
+	  Serial.println("WiFi not connected!");
+  }
+  else
+  {
+	  Serial.println("WiFi connected!");
+  }
 
   Serial.println ( "HTTP server started" );
 
@@ -441,8 +449,8 @@ void SpotifyClient::downloadFile(String url, String filename) {
     Serial.println("Downloading " + url + " and saving as " + filename);
 
     // wait for WiFi connection
-    boolean isFirstCall = true;
-
+    // TODO - decide if there's a different action for first call or subsequent calls
+	// boolean isFirstCall = true;
     HTTPClient http;
 
     Serial.print("[HTTP] begin...\n");
@@ -477,7 +485,6 @@ void SpotifyClient::downloadFile(String url, String filename) {
             WiFiClient * stream = http.getStreamPtr();
 
             // read all data from server
-            long lastDrawingUpdate = 0;
             while(http.connected() && (len > 0 || len == -1)) {
                 // get available data size
                 size_t size = stream->available();
@@ -493,7 +500,7 @@ void SpotifyClient::downloadFile(String url, String filename) {
                         len -= c;
                     }
                     //progressCallback(filename, total - len,total, false);
-                    isFirstCall = false;
+                    // isFirstCall = false;
                     executeCallback();
                 }
                 delay(1);
