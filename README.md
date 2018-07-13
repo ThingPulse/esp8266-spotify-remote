@@ -34,6 +34,10 @@ We developed this project specifically for our [ESP8266 Color Kit](https://thing
 
 Please see our [Guidelines](CONTRIBUTING.md) if you want to contribute to this project. Contributions are more than welcome!
 
+## Service level promise
+
+<table><tr><td><img src="https://thingpulse.com/assets/ThingPulse-open-source-community.png" width="150">
+</td><td>This is a ThingPulse <em>community</em> project. See our <a href="https://thingpulse.com/about/open-source-commitment/">open-source commitment declaration</a> for what this means.</td></tr></table>
 
 ## Setup Instructions
 
