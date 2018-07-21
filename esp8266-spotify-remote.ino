@@ -33,6 +33,26 @@
 #include "TouchControllerWS.h"
 #include "images.h"
 
+ // Statements like:
+ // #pragma message(Reminder "Fix this problem!")
+ // Which will cause messages like:
+ // C:\Source\Project\main.cpp(47): Reminder: Fix this problem!
+ // to show up during compiles. Note that you can NOT use the
+ // words "error" or "warning" in your reminders, since it will
+ // make the IDE think it should abort execution. You can double
+ // click on these messages and jump to the line in question.
+ //
+ // see https://stackoverflow.com/questions/5966594/how-can-i-use-pragma-message-so-that-the-message-points-to-the-filelineno
+ //
+#define Stringize( L )     #L 
+#define MakeString( M, L ) M(L)
+#define $Line MakeString( Stringize, __LINE__ )
+#define Reminder __FILE__ "(" $Line ") : Reminder: "
+#ifdef LOAD_SD_LIBRARY
+#pragma message(Reminder "Comment out the line with LOAD_SD_LIBRARY /JPEGDecoder/src/User_config.h !")
+#endif
+
+
 const char* host = "api.spotify.com";
 const int httpsPort = 443;
 
@@ -229,7 +249,9 @@ void loop() {
           command = "next";
         }
         uint16_t responseCode = client.playerCommand(&auth, method, command);
-      }
+		Serial.print("playerCommand response =");
+		Serial.println(responseCode);
+	  }
     }
 
 }
@@ -380,8 +402,9 @@ void drawJPEGFromSpiffs(String filename, int xpos, int ypos) {
   uint16_t mcu_w = JpegDec.MCUWidth;
   uint16_t mcu_h = JpegDec.MCUHeight;
   Serial.printf("MCU W/H: %d, %d\n", mcu_w, mcu_h);
-  uint32_t mcu_pixels = mcu_w * mcu_h;
-  uint32_t drawTime = millis();
+  // uint32_t mcu_pixels = mcu_w * mcu_h; // total pixels
+  // TODO immplmenet something to track drawtime performance
+  // uint32_t drawTime = millis();
 
   while( JpegDec.read()){
     
@@ -391,7 +414,7 @@ void drawJPEGFromSpiffs(String filename, int xpos, int ypos) {
     //if ( ( mcu_x + mcu_w) <= tft_->width() && ( mcu_y + mcu_h) <= tft_->height()){
       
       tft.setAddrWindow(mcu_x, mcu_y, mcu_x + (mcu_w / zoomFactor) - 1, mcu_y + (mcu_h / zoomFactor) - 1);
-      uint32_t count = mcu_pixels;
+      // uint32_t count = mcu_pixels; // what was this for?
       
       for (uint8_t y = 0; y < mcu_h; y++) {
         for (uint8_t x = 0; x < mcu_w; x++) {

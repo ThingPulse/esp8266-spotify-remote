@@ -52,24 +52,30 @@ bool TouchControllerWS::loadCalibration() {
 
   }
   f.close();
-
+  return true;
 }
 
 bool TouchControllerWS::saveCalibration() {
   bool result = SPIFFS.begin();
+  if (result) {
+	  Serial.println("SPIFFS started successfully");
+	  // open the file in write mode
+	  File f = SPIFFS.open("/calibration.txt", "w");
+	  if (!f) {
+		  Serial.println("file creation failed");
+	  }
+	  // now write two lines in key/value style with  end-of-line characters
+	  f.println(dx);
+	  f.println(dy);
+	  f.println(ax);
+	  f.println(ay);
 
-  // open the file in write mode
-  File f = SPIFFS.open("/calibration.txt", "w");
-  if (!f) {
-    Serial.println("file creation failed");
+	  f.close();
   }
-  // now write two lines in key/value style with  end-of-line characters
-  f.println(dx);
-  f.println(dy);
-  f.println(ax);
-  f.println(ay);
-
-  f.close();
+  else {
+	  Serial.println("SPIFFS failed to start!");
+  }
+  return result;
 }
 
 void TouchControllerWS::startCalibration(CalibrationCallback *calibrationCallback) {
@@ -111,11 +117,13 @@ bool TouchControllerWS::isCalibrationFinished() {
 }
 
 bool TouchControllerWS::isTouched() {
-  touchScreen->touched();
+	bool result;
+	result = touchScreen->touched();
+	return result;
 }
 
 bool TouchControllerWS::isTouched(int16_t debounceMillis) {
-  if (touchScreen->touched() && millis() - lastTouched > debounceMillis) {
+  if (touchScreen->touched() && (long)millis() - lastTouched > debounceMillis) {
     lastTouched = millis();
     return true;
   }

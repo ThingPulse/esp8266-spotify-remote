@@ -29,8 +29,6 @@
 #include <FS.h>
 #include <base64.h>
 
-#define min(X, Y) (((X)<(Y))?(X):(Y))
-
 typedef void (*DrawingCallback)();
 
 typedef struct SpotifyAuth {

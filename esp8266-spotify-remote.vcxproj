@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C5F80730-F44F-4478-BDAE-6634EFC2CA88}</ProjectGuid>
+    <RootNamespace>esp8266_spotify_remote</RootNamespace>
+    <ProjectName>esp8266-spotify-remote</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>
+    </PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>
+    </PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\esp8266-spotify-remote;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WiFi\src;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\libraries\minigrafx\src;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\libraries\JPEGDecoder\src;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\SD\src;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\SPI;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266mDNS;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\libraries\json-streaming-parser;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266WebServer\src;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\libraries\XPT2046_Touchscreen;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries\ESP8266HTTPClient\src;$(ProjectDir)..\..\Program Files (x86)\Arduino\libraries;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\libraries;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\libraries;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\cores\esp8266;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\cores\esp8266\avr;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\cores\esp8266\libb64;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\cores\esp8266\spiffs;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\cores\esp8266\umm_malloc;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\variants\nodemcu;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\sdk\include;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\sdk\lwip2\include;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\sdk\libc\xtensa-lx106-elf\include;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include\c++\4.8.2;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include\c++\4.8.2\xtensa-lx106-elf;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\xtensa-lx106-elf\include;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\xtensa-lx106-elf\lib\gcc\xtensa-lx106-elf\4.8.2\include;$(ProjectDir)..\..\Users\$(USERNAME)\Documents\Arduino\hardware\esp8266com\esp8266\tools\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.esp8266-spotify-remote.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>__ESP8266_ESp8266__;__ESP8266_ESP8266__;_VMDEBUG=1;__ets__;ICACHE_FLASH;F_CPU=80000000L;LWIP_OPEN_SRC;TCP_MSS=536;DEBUG_ESP_PORT=Serial;DEBUG_ESP_SSL;DEBUG_ESP_TLS_MEM;DEBUG_ESP_HTTP_CLIENT;DEBUG_ESP_HTTP_SERVER;DEBUG_ESP_CORE;DEBUG_ESP_WIFI;DEBUG_ESP_HTTP_UPDATE;DEBUG_ESP_UPDATER;DEBUG_ESP_OTA;DEBUG_ESP_OOM;ARDUINO=10805;ARDUINO_ESP8266_NODEMCU;ARDUINO_ARCH_ESP8266;ESP8266;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="VisualMicro" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="CONTRIBUTING.md" />
+    <None Include="esp8266-spotify-remote.ino">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="LICENSE" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="images.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="SpotifyClient.h" />
+    <ClInclude Include="TouchControllerWS.h" />
+    <ClInclude Include="__vm\.esp8266-spotify-remote.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SpotifyClient.cpp" />
+    <ClCompile Include="TouchControllerWS.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\SpotifyAppSettings.png" />
+    <Image Include="images\SpotifyAppSettingsSave.png" />
+    <Image Include="images\SpotifyAppSignUp1.png" />
+    <Image Include="images\SpotifyConnectScreen.png" />
+    <Image Include="images\SpotifyCredentials.png" />
+    <Image Include="images\SpotifyDashboard.png" />
+    <Image Include="images\SpotifyppSignUp3.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
