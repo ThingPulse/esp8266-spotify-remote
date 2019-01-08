@@ -87,7 +87,7 @@ After all this configuration it's about time to run the application!
 
 1. First check the configuration in `settings.h` one more time to ensure the Spotify values match those set on the Spotify Developer Dashboard. Better safe than sorry, they say.
 
-2. Attach your [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/) to your computer and select the correct serial port in the Arduino IDE
+2. Attach your [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/) to your computer and select the correct serial port and flash settings in the Arduino IDE as per https://docs.thingpulse.com/guides/wifi-color-display-kit/#select-flash-mode-and-flash-size
 
 3. Upload the code to your ESP8266
 
