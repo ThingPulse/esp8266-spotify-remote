@@ -82,7 +82,7 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   client.setNoDelay(false);
   // while(client.connected()) {
   uint16_t httpCode = 0;
-  do {
+  while(client.connected() || client.available()) {
     while((size = client.available()) > 0) {
    
       if (isBody) {
@@ -106,7 +106,7 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
       }
       executeCallback();
     }
-  } while(client.connected());
+  }
   if (httpCode == 200) {
     this->data->isPlayerActive = true;
   } else if (httpCode == 204) {
@@ -166,9 +166,8 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   client.setNoDelay(false);
   // while(client.connected()) {
   uint16_t httpCode = 0;
-  do {
+  while(client.connected() || client.available()) {
     while((size = client.available()) > 0) {
-   
       if (isBody) {
         uint16_t len = min(bufLen, size);
         c = client.readBytes(buf, len);
@@ -190,7 +189,7 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
       }
     }
     executeCallback();
-  } while(client.connected());
+  }
   return httpCode;
 }
 
@@ -246,8 +245,7 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
 
   int size = 0;
   client.setNoDelay(false);
-  // while(client.connected()) {
-  do {
+  while(client.connected() || client.available()) {
     while((size = client.available()) > 0) {
       c = client.read();
       if (c == '{' || c == '[') {
@@ -261,7 +259,7 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
       }
     }
     executeCallback();
-  } while(client.connected());
+  }
 
   this->data = nullptr;
 }
@@ -293,13 +291,10 @@ String SpotifyClient::startConfigPortal() {
 
   server.begin();
 
-  boolean connected = WiFi.status() == WL_CONNECTED;
-  if (connected) {
-	  Serial.println("WiFi not connected!");
-  }
-  else
-  {
+  if (WiFi.status() == WL_CONNECTED) {
 	  Serial.println("WiFi connected!");
+  } else {
+	  Serial.println("WiFi not connected!");
   }
 
   Serial.println ( "HTTP server started" );
@@ -518,4 +513,3 @@ void SpotifyClient::downloadFile(String url, String filename) {
     http.end();
     
 }
-
