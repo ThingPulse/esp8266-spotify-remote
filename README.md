@@ -26,7 +26,7 @@ Demo Video:
 We developed this project specifically for our [ESP8266 Color Kit](https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/). If you appreciate the hard work and our willingness to open-source projects like this one then please support us by buying our hardware.
 
 <a href="https://thingpulse.com/product/esp8266-wifi-color-display-kit-2-4/">
-  <img src="https://thingpulse.com/wp-content/uploads/2018/01/BoxSmall.jpeg" width="300">
+  <img src="https://thingpulse.com/wp-content/uploads/2019/04/ThingPulse-Color-Kit-2-768x534.jpg" width="300">
 </a>
 
 
