@@ -21,13 +21,13 @@
  SOFTWARE.
  */
 
+#include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 #include <MiniGrafx.h>
 #include <ILI9341_SPI.h>
 #include <FS.h>
 #include <JPEGDecoder.h>
-#include <ESP8266mDNS.h>  
 #include "SpotifyClient.h"
 #include "settings.h"
 #include "TouchControllerWS.h"
