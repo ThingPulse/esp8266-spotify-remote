@@ -127,25 +127,27 @@ typedef struct SpotifyData {
 class SpotifyClient: public JsonListener {
   private:
 
-  String currentKey;
-  String currentParent;
-  SpotifyData *data;
-  SpotifyAuth *auth;
-  bool isDataCall;
-  String rootPath[10];
-  uint8_t level = 0;
-  uint16_t currentImageHeight;
-  DrawingCallback *drawingCallback;
-  String clientId;
-  String clientSecret;
-  String redirectUri;
-  ESP8266WebServer server;
-
-  String getRootPath();
-  void executeCallback();
+    String currentKey;
+    String currentParent;
+    SpotifyData *data;
+    SpotifyAuth *auth;
+    bool isDataCall;
+    String rootPath[10];
+    uint8_t level = 0;
+    uint16_t currentImageHeight;
+    DrawingCallback *drawingCallback;
+    String clientId;
+    String clientSecret;
+    String redirectUri;
+    ESP8266WebServer server;
+  
+    String getRootPath();
+    void executeCallback();
 
   public:
+    
     SpotifyClient(String clientId, String clientSecret, String redirectUri);
+    
     uint16_t update(SpotifyData *data, SpotifyAuth *auth);
 
     uint16_t playerCommand(SpotifyAuth *auth, String method, String command);
@@ -159,8 +161,6 @@ class SpotifyClient: public JsonListener {
     }
 
     String startConfigPortal(const String mDnsName);
-
-
 
     virtual void whitespace(char c);
 
@@ -180,5 +180,4 @@ class SpotifyClient: public JsonListener {
 
     virtual void startObject();
 
-    
 };

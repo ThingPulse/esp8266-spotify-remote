@@ -1,17 +1,17 @@
 /**The MIT License (MIT)
- 
+
  Copyright (c) 2018 by ThingPulse Ltd., https://thingpulse.com
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,21 +21,19 @@
  SOFTWARE.
  */
 
-#include <ESP8266mDNS.h>
-#include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+
 #include "SpotifyClient.h"
 
-#define min(X, Y) (((X)<(Y))?(X):(Y))
-
-
+#define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 
 SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri) {
   this->clientId = clientId;
   this->clientSecret = clientSecret;
   this->redirectUri = redirectUri;
 }
-
 
 uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   this->data = data;
@@ -55,8 +53,7 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
     return 0;
   }
 
-   Serial.print("Requesting URL: ");
-  //Serial.println(url);
+  Serial.print("Requesting URL: ");
   String request = "GET " + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" +
                "Authorization: Bearer " + auth->accessToken + "\r\n" +
@@ -64,9 +61,9 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   // This will send the request to the server
   Serial.println(request);
   client.print(request);
-  
+
   int retryCounter = 0;
-  while(!client.available()) {
+  while (!client.available()) {
     executeCallback();
     retryCounter++;
     if (retryCounter > 10) {
@@ -83,22 +80,22 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   client.setNoDelay(false);
   // while(client.connected()) {
   uint16_t httpCode = 0;
-  while(client.connected() || client.available()) {
-    while((size = client.available()) > 0) {
-   
+  while (client.connected() || client.available()) {
+    while ((size = client.available()) > 0) {
+
       if (isBody) {
         uint16_t len = min(bufLen, size);
         c = client.readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
-          //Serial.print((char)buf[i]);
+          // Serial.print((char)buf[i]);
         }
       } else {
         String line = client.readStringUntil('\r');
         Serial.println(line);
         if (line.startsWith("HTTP/1.")) {
           httpCode = line.substring(9, line.indexOf(' ', 9)).toInt();
-          Serial.printf("HTTP Code: %d\n", httpCode); 
+          Serial.printf("HTTP Code: %d\n", httpCode);
         }
         if (line == "\r" || line == "\n" || line == "") {
           Serial.println("Body starts now");
@@ -113,12 +110,11 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   } else if (httpCode == 204) {
     this->data->isPlayerActive = false;
   }
-  //client.flush();
-  //client.stop();
+  // client.flush();
+  // client.stop();
   this->data = nullptr;
   return httpCode;
 }
-
 
 uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String command) {
 
@@ -137,8 +133,7 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
     return 0;
   }
 
-   Serial.print("Requesting URL: ");
-  //Serial.println(url);
+  Serial.print("Requesting URL: ");
   String request = method + " " + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" +
                "Authorization: Bearer " + auth->accessToken + "\r\n" +
@@ -147,9 +142,9 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   // This will send the request to the server
   Serial.println(request);
   client.print(request);
-  
+
   int retryCounter = 0;
-  while(!client.available()) {
+  while (!client.available()) {
     executeCallback();
 
     retryCounter++;
@@ -167,21 +162,21 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   client.setNoDelay(false);
   // while(client.connected()) {
   uint16_t httpCode = 0;
-  while(client.connected() || client.available()) {
-    while((size = client.available()) > 0) {
+  while (client.connected() || client.available()) {
+    while ((size = client.available()) > 0) {
       if (isBody) {
         uint16_t len = min(bufLen, size);
         c = client.readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
-          //Serial.print((char)buf[i]);
+          // Serial.print((char)buf[i]);
         }
       } else {
         String line = client.readStringUntil('\r');
         Serial.println(line);
         if (line.startsWith("HTTP/1.")) {
           httpCode = line.substring(9, line.indexOf(' ', 9)).toInt();
-          Serial.printf("HTTP Code: %d\n", httpCode); 
+          Serial.printf("HTTP Code: %d\n", httpCode);
         }
         if (line == "\r" || line == "\n" || line == "") {
           Serial.println("Body starts now");
@@ -200,8 +195,8 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   JsonStreamingParser parser;
   parser.setListener(this);
   WiFiClientSecure client;
-  //https://accounts.spotify.com/api/token
-  const char* host = "accounts.spotify.com";
+  // https://accounts.spotify.com/api/token
+  const char *host = "accounts.spotify.com";
   const int port = 443;
   String url = "/api/token";
   if (!client.connect(host, port)) {
@@ -210,10 +205,9 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   }
 
   Serial.print("Requesting URL: ");
-  //Serial.println(url);
   String codeParam = "code";
   if (grantType == "refresh_token") {
-    codeParam = "refresh_token"; 
+    codeParam = "refresh_token";
   }
   String authorizationRaw = clientId + ":" + clientSecret;
   String authorization = base64::encode(authorizationRaw, false);
@@ -228,10 +222,9 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
                content;
   Serial.println(request);
   client.print(request);
-      
 
   int retryCounter = 0;
-  while(!client.available()) {
+  while (!client.available()) {
     executeCallback();
     retryCounter++;
     if (retryCounter > 10) {
@@ -246,8 +239,8 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
 
   int size = 0;
   client.setNoDelay(false);
-  while(client.connected() || client.available()) {
-    while((size = client.available()) > 0) {
+  while (client.connected() || client.available()) {
+    while ((size = client.available()) > 0) {
       c = client.read();
       if (c == '{' || c == '[') {
         isBody = true;
@@ -268,48 +261,50 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
 String SpotifyClient::startConfigPortal(const String mDnsName) {
   String oneWayCode = "";
 
-  server.on ( "/", [this]() {
-    Serial.println(this->clientId);
-    Serial.println(this->redirectUri);
-    server.sendHeader("Location", String("https://accounts.spotify.com/authorize/?client_id=" 
-      + this->clientId 
-      + "&response_type=code&redirect_uri=" 
-      + this->redirectUri 
-      + "&scope=user-read-private%20user-read-currently-playing%20user-read-playback-state%20user-modify-playback-state"), true);
-    server.send ( 302, "text/plain", "");
-  } );
+  Serial.println("Starting config portal");
+  server.on("/", [this]() {
+    Serial.println("Serving resource '/'");
+    Serial.println("Sending HTTP 302 to Spotify");
+    server.sendHeader(
+        "Location",
+        String("https://accounts.spotify.com/authorize/?client_id=" +
+               this->clientId +
+               "&response_type=code&redirect_uri=" + this->redirectUri +
+               "&scope=user-read-private%20user-read-currently-playing%20user-"
+               "read-playback-state%20user-modify-playback-state"),
+        true);
+    server.send(302, "text/plain", "");
+  });
 
-  server.on ( "/callback/", [this, &oneWayCode](){
-    if(!server.hasArg("code")) {server.send(500, "text/plain", "BAD ARGS"); return;}
-    
+  server.on("/callback/", [this, &oneWayCode]() {
+    if (!server.hasArg("code")) {
+      server.send(500, "text/plain", "BAD ARGS");
+      return;
+    }
+
     oneWayCode = server.arg("code");
     Serial.printf("Code: %s\n", oneWayCode.c_str());
-  
     String message = "<html><head></head><body>Succesfully authentiated This device with Spotify. Restart your device now</body></html>";
-  
-    server.send ( 200, "text/html", message );
-  } );
+    server.send(200, "text/html", message);
+  });
 
   server.begin();
 
-  if (WiFi.status() == WL_CONNECTED) {
-	  Serial.println("WiFi connected!");
-  } else {
-	  Serial.println("WiFi not connected!");
-  }
-
-  Serial.println ( "HTTP server started" );
+  Serial.println("HTTP server started");
 
   if (!MDNS.begin(mDnsName)) {
     Serial.println("Error setting up MDNS responder!");
   }
-  Serial.println("mDNS responder started");  
+  Serial.println("mDNS responder started");
+  Serial.println("Open browser at http://" + mDnsName + ".local");
 
-  while(oneWayCode == "") {
+  while (oneWayCode == "") {
     MDNS.update();
     server.handleClient();
     yield();
   }
+
+  Serial.println("Stopping HTTP server");
   server.stop();
   return oneWayCode;
 }
@@ -326,7 +321,6 @@ void SpotifyClient::startDocument() {
 void SpotifyClient::key(String key) {
   currentKey = String(key);
   rootPath[level] = key;
-  //Serial.println(getRootPath());
 }
 
 String SpotifyClient::getRootPath() {
@@ -346,11 +340,11 @@ String SpotifyClient::getRootPath() {
 
 void SpotifyClient::value(String value) {
   if (isDataCall) {
-    
+
     String rootPath = this->getRootPath();
-    //Serial.printf("%s = %s\n", rootPath.c_str(), value.c_str());
-    //Serial.printf("%s = %s\n", currentKey.c_str(), value.c_str());
-      // progress_ms = 37516 uint32_t progressMs;
+    // Serial.printf("%s = %s\n", rootPath.c_str(), value.c_str());
+    // Serial.printf("%s = %s\n", currentKey.c_str(), value.c_str());
+    // progress_ms = 37516 uint32_t progressMs;
     if (currentKey == "progress_ms") {
       data->progressMs = value.toInt();
     }
@@ -413,110 +407,102 @@ void SpotifyClient::value(String value) {
   }
 }
 
-void SpotifyClient::endArray() {
-
-}
-
+void SpotifyClient::endArray() {}
 
 void SpotifyClient::startObject() {
-  //Serial.println("Starting new object: " + currentKey);
+  // Serial.println("Starting new object: " + currentKey);
   currentParent = currentKey;
-  //rootPath[level] = currentKey;
+  // rootPath[level] = currentKey;
   level++;
-  
-  //level++;*/
+
+  // level++;*/
 }
 
 void SpotifyClient::endObject() {
-  //rootPath[level] = "";
+  // rootPath[level] = "";
   level--;
   currentParent = "";
 }
 
-void SpotifyClient::endDocument() {
+void SpotifyClient::endDocument() {}
 
-}
-
-void SpotifyClient::startArray() {
-
-}
+void SpotifyClient::startArray() {}
 
 void SpotifyClient::executeCallback() {
-    if (drawingCallback != nullptr) {
-      (*this->drawingCallback)();
-    }
+  if (drawingCallback != nullptr) {
+    (*this->drawingCallback)();
+  }
 }
 
 void SpotifyClient::downloadFile(String url, String filename) {
-    Serial.println("Downloading " + url + " and saving as " + filename);
+  Serial.println("Downloading " + url + " and saving as " + filename);
 
-    // wait for WiFi connection
-    // TODO - decide if there's a different action for first call or subsequent calls
-	// boolean isFirstCall = true;
-    HTTPClient http;
+  // wait for WiFi connection
+  // TODO - decide if there's a different action for first call or subsequent
+  // calls boolean isFirstCall = true;
+  HTTPClient http;
 
-    Serial.print("[HTTP] begin...\n");
+  Serial.print("[HTTP] begin...\n");
 
-    // configure server and url
-    http.begin(url);
+  // configure server and url
+  http.begin(url);
 
-    Serial.print("[HTTP] GET...\n");
-    // start connection and send HTTP header
-    int httpCode = http.GET();
-    if(httpCode > 0) {
-        //SPIFFS.remove(filename);
-        fs::File f = SPIFFS.open(filename, "w+");
-        if (!f) {
-            Serial.println("file open failed");
-            return;
-        }
-        // HTTP header has been send and Server response header has been handled
-        Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-
-        // file found at server
-        if(httpCode == HTTP_CODE_OK) {
-
-            // get lenght of document (is -1 when Server sends no Content-Length header)
-            int total = http.getSize();
-            int len = total;
-            //progressCallback(filename, 0,total, true);
-            // create buffer for read
-            uint8_t buff[128] = { 0 };
-
-            // get tcp stream
-            WiFiClient * stream = http.getStreamPtr();
-
-            // read all data from server
-            while(http.connected() && (len > 0 || len == -1)) {
-                // get available data size
-                size_t size = stream->available();
-
-                if(size) {
-                    // read up to 128 byte
-                    int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
-
-                    // write it to Serial
-                    f.write(buff, c);
-
-                    if(len > 0) {
-                        len -= c;
-                    }
-                    //progressCallback(filename, total - len,total, false);
-                    // isFirstCall = false;
-                    executeCallback();
-                }
-                delay(1);
-            }
-
-            Serial.println();
-            Serial.print("[HTTP] connection closed or file end.\n");
-
-        }
-        f.close();
-    } else {
-        Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  Serial.print("[HTTP] GET...\n");
+  // start connection and send HTTP header
+  int httpCode = http.GET();
+  if (httpCode > 0) {
+    // SPIFFS.remove(filename);
+    fs::File f = SPIFFS.open(filename, "w+");
+    if (!f) {
+      Serial.println("file open failed");
+      return;
     }
-    
-    http.end();
-    
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+
+    // file found at server
+    if (httpCode == HTTP_CODE_OK) {
+
+      // get lenght of document (is -1 when Server sends no Content-Length
+      // header)
+      int total = http.getSize();
+      int len = total;
+      // progressCallback(filename, 0,total, true);
+      // create buffer for read
+      uint8_t buff[128] = {0};
+
+      // get tcp stream
+      WiFiClient *stream = http.getStreamPtr();
+
+      // read all data from server
+      while (http.connected() && (len > 0 || len == -1)) {
+        // get available data size
+        size_t size = stream->available();
+
+        if (size) {
+          // read up to 128 byte
+          int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+
+          // write it to Serial
+          f.write(buff, c);
+
+          if (len > 0) {
+            len -= c;
+          }
+          // progressCallback(filename, total - len,total, false);
+          // isFirstCall = false;
+          executeCallback();
+        }
+        delay(1);
+      }
+
+      Serial.println();
+      Serial.print("[HTTP] connection closed or file end.\n");
+    }
+    f.close();
+  } else {
+    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+
+  http.end();
 }

@@ -102,9 +102,8 @@ void setup() {
   displayLogo();
   gfx.fillBuffer(MINI_BLACK);
   gfx.commit(0, 160);
-  delay(2000);
+  
   boolean mounted = SPIFFS.begin();
- 
   if (!mounted) {
     Serial.println("FS not formatted. Doing that now");
     gfx.drawString(120, 10, "Formatting file system.\nPlease stand by...");
@@ -114,11 +113,10 @@ void setup() {
     SPIFFS.begin();
   }
 
+  // init the touch screen
   ts.begin();
 
-  //SPIFFS.remove("/calibration.txt");
   boolean isCalibrationAvailable = touchController.loadCalibration();
-  // isCalibrationAvailable = false;
   if (!isCalibrationAvailable) {
     Serial.println("Calibration not available");
     touchController.startCalibration(&calibration);
@@ -142,7 +140,7 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  
+
   String code = "";
   String grantType = "";
   String refreshToken = loadRefreshToken();
@@ -152,8 +150,6 @@ void setup() {
     gfx.setColor(MINI_YELLOW);
     gfx.setTextAlignment(TEXT_ALIGN_CENTER);
     gfx.setFont(ArialMT_Plain_16);
-  
-    Serial.println ( "Open browser at http://" + espotifierNodeName + ".local" );
   
     gfx.drawString(120, 10, "Authentication required.\nOpen browser at\nhttp://" + espotifierNodeName + ".local");
     gfx.commit(0, 0);
@@ -174,83 +170,75 @@ void setup() {
 }
 
 void loop() {
-
-
-    if (millis() - lastUpdate > 1000) {
-      uint16_t responseCode = client.update(&data, &auth);
-      Serial.printf("HREF: %s\n", data.image300Href.c_str());
-      lastUpdate = millis();
-      Serial.printf("--------Response Code: %d\n", responseCode);
-      Serial.printf("--------Free mem: %d\n", ESP.getFreeHeap());
-      if (responseCode == 401) {
-        client.getToken(&auth, "refresh_token", auth.refreshToken);
-        if (auth.refreshToken != "") {
-          saveRefreshToken(auth.refreshToken);
-        }
+  if (millis() - lastUpdate > 1000) {
+    uint16_t responseCode = client.update(&data, &auth);
+    Serial.printf("HREF: %s\n", data.image300Href.c_str());
+    lastUpdate = millis();
+    Serial.printf("--------Response Code: %d\n", responseCode);
+    Serial.printf("--------Free mem: %d\n", ESP.getFreeHeap());
+    if (responseCode == 401) {
+      client.getToken(&auth, "refresh_token", auth.refreshToken);
+      if (auth.refreshToken != "") {
+        saveRefreshToken(auth.refreshToken);
       }
-      if (responseCode == 200) {
-
-
-        String selectedImageHref = data.image300Href;
-        selectedImageHref.replace("https", "http");
-        
-        
-        if (selectedImageHref != currentImageUrl) {
-
-          Serial.println("New Image. Downloading it");
-
-          isDownloadingCover = true;
-          client.downloadFile(selectedImageHref, "/cover.jpg");
-          isDownloadingCover = false;
-          currentImageUrl = selectedImageHref;
-          drawJPEGFromSpiffs("/cover.jpg", 45, 0);
-          gfx.setColor(ILI9341_YELLOW);
-        }
- 
-      }
-      if (responseCode == 400) {
-        gfx.fillBuffer(MINI_BLACK);
-        gfx.setColor(MINI_WHITE);
-        gfx.setTextAlignment(TEXT_ALIGN_CENTER);
-        gfx.drawString(120, 20, "Please define\nclientId and clientSecret");
-        gfx.commit(0,160);
-      }
-
     }
-    drawSongInfo();
-    
-    if (touchController.isTouched(500) && millis() - lastTouchMillis > 1000) {
-      TS_Point p = touchController.getPoint();
-      lastTouchPoint = p;
-      lastTouchMillis = millis();
-      String command = "";
-      String method = "";
-      if (p.y > 160) {
-        if (p.x < 80) {
-          method = "POST"; 
-          command = "previous";
-        } else if (p.x >= 80 && p.x <= 160) {
-          method = "PUT"; 
-          command = "play";
-          if (data.isPlaying) {
-            command = "pause";
-          }
-          data.isPlaying = !data.isPlaying;   
-        } else if (p.x > 160) {
-          method = "POST"; 
-          command = "next";
-        }
-        uint16_t responseCode = client.playerCommand(&auth, method, command);
-		Serial.print("playerCommand response =");
-		Serial.println(responseCode);
-	  }
-    }
+    if (responseCode == 200) {
+      String selectedImageHref = data.image300Href;
+      selectedImageHref.replace("https", "http");
 
+      if (selectedImageHref != currentImageUrl) {
+
+        Serial.println("New Image. Downloading it");
+
+        isDownloadingCover = true;
+        client.downloadFile(selectedImageHref, "/cover.jpg");
+        isDownloadingCover = false;
+        currentImageUrl = selectedImageHref;
+        drawJPEGFromSpiffs("/cover.jpg", 45, 0);
+        gfx.setColor(ILI9341_YELLOW);
+      }
+    }
+    if (responseCode == 400) {
+      gfx.fillBuffer(MINI_BLACK);
+      gfx.setColor(MINI_WHITE);
+      gfx.setTextAlignment(TEXT_ALIGN_CENTER);
+      gfx.drawString(120, 20, "Please define\nclientId and clientSecret");
+      gfx.commit(0, 160);
+    }
+  }
+  drawSongInfo();
+
+  if (touchController.isTouched(500) && millis() - lastTouchMillis > 1000) {
+    TS_Point p = touchController.getPoint();
+    lastTouchPoint = p;
+    lastTouchMillis = millis();
+    String command = "";
+    String method = "";
+    if (p.y > 160) {
+      if (p.x < 80) {
+        method = "POST";
+        command = "previous";
+      } else if (p.x >= 80 && p.x <= 160) {
+        method = "PUT";
+        command = "play";
+        if (data.isPlaying) {
+          command = "pause";
+        }
+        data.isPlaying = !data.isPlaying;
+      } else if (p.x > 160) {
+        method = "POST";
+        command = "next";
+      }
+      uint16_t responseCode = client.playerCommand(&auth, method, command);
+      Serial.print("playerCommand response =");
+      Serial.println(responseCode);
+    }
+  }
 }
 
 void drawSongInfo() {
   if (millis() - lastDrawingUpdate < 333) {
-    return;   
+    return;
   }
   lastDrawingUpdate = millis();
   long timeSinceUpdate = 0;
@@ -264,20 +252,19 @@ void drawProgress(uint64_t progressMs, uint64_t durationMs, String songTitle, St
   counter++;
 
   if (isDownloadingCover) {
-      gfx.fillBuffer(MINI_BLACK);
-      gfx.setColor(MINI_WHITE);
-      gfx.drawCircle(100, 80, 5);
-      gfx.drawCircle(120, 80, 5);
-      gfx.drawCircle(140, 80, 5);
-      gfx.fillCircle(100 + 20 * (counter % 3), 80, 5);
-      gfx.commit(0,0);
+    gfx.fillBuffer(MINI_BLACK);
+    gfx.setColor(MINI_WHITE);
+    gfx.drawCircle(100, 80, 5);
+    gfx.drawCircle(120, 80, 5);
+    gfx.drawCircle(140, 80, 5);
+    gfx.fillCircle(100 + 20 * (counter % 3), 80, 5);
+    gfx.commit(0, 0);
   }
-  
-  gfx.fillBuffer(MINI_BLACK); 
+
+  gfx.fillBuffer(MINI_BLACK);
   if (isPlayerActive) {
-    
     gfx.setTextAlignment(TEXT_ALIGN_LEFT);
-       
+
     uint8_t percentage = 100.0 * progressMs / durationMs;
     gfx.setColor(MINI_WHITE);
     gfx.setTextAlignment(TEXT_ALIGN_LEFT);
@@ -292,7 +279,7 @@ void drawProgress(uint64_t progressMs, uint64_t durationMs, String songTitle, St
     gfx.setColor(MINI_WHITE);
     gfx.drawLine(10, progressY, progressX, progressY);
     gfx.fillCircle(progressX, progressY, 5);
-  
+
     gfx.setTextAlignment(TEXT_ALIGN_LEFT);
     String animatedTitle = songTitle;
     uint8_t maxChar = 30;
@@ -306,7 +293,7 @@ void drawProgress(uint64_t progressMs, uint64_t durationMs, String songTitle, St
     gfx.setColor(MINI_GRAY);
     gfx.drawString(120, 30, artistName);
     gfx.setColor(MINI_YELLOW);
-    gfx.drawPalettedBitmapFromPgm(88, 90, isPlaying ?  miniPause : miniPlay);
+    gfx.drawPalettedBitmapFromPgm(88, 90, isPlaying ? miniPause : miniPlay);
 
     gfx.drawPalettedBitmapFromPgm(30, 90, miniPrevious);
     gfx.drawPalettedBitmapFromPgm(190, 90, miniNext);
@@ -318,7 +305,6 @@ void drawProgress(uint64_t progressMs, uint64_t durationMs, String songTitle, St
   } else {
     displayLogo();
   }
-
 }
 
 void displayLogo() {
@@ -357,7 +343,6 @@ String formatTime(uint32_t time) {
 }
 
 void saveRefreshToken(String refreshToken) {
-  
   File f = SPIFFS.open("/refreshToken.txt", "w+");
   if (!f) {
     Serial.println("Failed to open config file");
@@ -374,12 +359,12 @@ String loadRefreshToken() {
     Serial.println("Failed to open config file");
     return "";
   }
-  while(f.available()) {
-      //Lets read line by line from the file
-      String token = f.readStringUntil('\r');
-      Serial.printf("Refresh Token: %s\n", token.c_str());
-      f.close();
-      return token;
+  while (f.available()) {
+    // Lets read line by line from the file
+    String token = f.readStringUntil('\r');
+    Serial.printf("Refresh Token: %s\n", token.c_str());
+    f.close();
+    return token;
   }
   return "";
 }
@@ -387,10 +372,10 @@ String loadRefreshToken() {
 void drawJPEGFromSpiffs(String filename, int xpos, int ypos) {
   char buffer[filename.length() + 1];
   filename.toCharArray(buffer, filename.length() + 1);
-  
+
   JpegDec.decodeFile(buffer);
   uint8_t zoomFactor = 2;
-  uint16_t  *pImg;
+  uint16_t *pImg;
   uint16_t mcu_w = JpegDec.MCUWidth;
   uint16_t mcu_h = JpegDec.MCUHeight;
   Serial.printf("MCU W/H: %d, %d\n", mcu_w, mcu_h);
@@ -398,26 +383,21 @@ void drawJPEGFromSpiffs(String filename, int xpos, int ypos) {
   // TODO immplmenet something to track drawtime performance
   // uint32_t drawTime = millis();
 
-  while( JpegDec.read()){
-    
+  while (JpegDec.read()) {
     pImg = JpegDec.pImage;
     int mcu_x = (JpegDec.MCUx * mcu_w) / zoomFactor + xpos;
     int mcu_y = (JpegDec.MCUy * mcu_h) / zoomFactor + ypos;
-    //if ( ( mcu_x + mcu_w) <= tft_->width() && ( mcu_y + mcu_h) <= tft_->height()){
-      
-      tft.setAddrWindow(mcu_x, mcu_y, mcu_x + (mcu_w / zoomFactor) - 1, mcu_y + (mcu_h / zoomFactor) - 1);
-      // uint32_t count = mcu_pixels; // what was this for?
-      
-      for (uint8_t y = 0; y < mcu_h; y++) {
-        for (uint8_t x = 0; x < mcu_w; x++) {
-          if (x % zoomFactor == 0 && y % zoomFactor == 0) {
-            tft.pushColor(*pImg);
-          }
-          *pImg++;
-        }
-      }
-      drawSongInfo();
-  
-  }
 
+    tft.setAddrWindow(mcu_x, mcu_y, mcu_x + (mcu_w / zoomFactor) - 1, mcu_y + (mcu_h / zoomFactor) - 1);
+
+    for (uint8_t y = 0; y < mcu_h; y++) {
+      for (uint8_t x = 0; x < mcu_w; x++) {
+        if (x % zoomFactor == 0 && y % zoomFactor == 0) {
+          tft.pushColor(*pImg);
+        }
+        *pImg++;
+      }
+    }
+    drawSongInfo();
+  }
 }
