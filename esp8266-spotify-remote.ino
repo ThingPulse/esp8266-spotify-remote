@@ -21,7 +21,6 @@
  SOFTWARE.
  */
 
-#include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 #include <MiniGrafx.h>
@@ -143,13 +142,6 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-
-  
-  if (!MDNS.begin("esp8266")) {             // Start the mDNS responder for esp8266.local
-    Serial.println("Error setting up MDNS responder!");
-  }
-  Serial.println("mDNS responder started");
-
   
   String code = "";
   String grantType = "";
@@ -166,7 +158,7 @@ void setup() {
     gfx.drawString(120, 10, "Authentication required.\nOpen browser at\nhttp://" + espotifierNodeName + ".local");
     gfx.commit(0, 0);
 
-    code = client.startConfigPortal();
+    code = client.startConfigPortal(espotifierNodeName);
     grantType = "authorization_code";
   } else {
     Serial.println("Using refresh token found on the FS");

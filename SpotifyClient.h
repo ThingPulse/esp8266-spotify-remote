@@ -158,7 +158,7 @@ class SpotifyClient: public JsonListener {
       this->drawingCallback = drawingCallback;
     }
 
-    String startConfigPortal();
+    String startConfigPortal(const String mDnsName);
 
 
 
@@ -182,4 +182,3 @@ class SpotifyClient: public JsonListener {
 
     
 };
-

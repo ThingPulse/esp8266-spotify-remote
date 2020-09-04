@@ -21,6 +21,7 @@
  SOFTWARE.
  */
 
+#include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include "SpotifyClient.h"
@@ -264,7 +265,7 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   this->data = nullptr;
 }
 
-String SpotifyClient::startConfigPortal() {
+String SpotifyClient::startConfigPortal(const String mDnsName) {
   String oneWayCode = "";
 
   server.on ( "/", [this]() {
@@ -299,7 +300,13 @@ String SpotifyClient::startConfigPortal() {
 
   Serial.println ( "HTTP server started" );
 
+  if (!MDNS.begin(mDnsName)) {
+    Serial.println("Error setting up MDNS responder!");
+  }
+  Serial.println("mDNS responder started");  
+
   while(oneWayCode == "") {
+    MDNS.update();
     server.handleClient();
     yield();
   }
