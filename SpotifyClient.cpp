@@ -21,18 +21,20 @@
  SOFTWARE.
  */
 
-#include <ESP8266HTTPClient.h>
+#pragma once
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include <ESP8266mDNS.h>
 
 #include "SpotifyClient.h"
 
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 
-SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri) {
+SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri, WiFiClientSecure *wifiClient) {
   this->clientId = clientId;
   this->clientSecret = clientSecret;
   this->redirectUri = redirectUri;
+  this->wifiClient = wifiClient;
 }
 
 uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
@@ -41,14 +43,13 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   level = 0;
   isDataCall = true;
   currentParent = "";
-  WiFiClientSecure client = WiFiClientSecure();
   JsonStreamingParser parser;
   parser.setListener(this);
 
   String host = "api.spotify.com";
   const int port = 443;
   String url = "/v1/me/player/currently-playing";
-  if (!client.connect(host.c_str(), port)) {
+  if (!wifiClient->connect(host.c_str(), port)) {
     Serial.println("connection failed");
     return 0;
   }
@@ -60,10 +61,10 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
                "Connection: close\r\n\r\n";
   // This will send the request to the server
   Serial.println(request);
-  client.print(request);
+  wifiClient->print(request);
 
   int retryCounter = 0;
-  while (!client.available()) {
+  while (!wifiClient->available()) {
     executeCallback();
     retryCounter++;
     if (retryCounter > 10) {
@@ -77,21 +78,20 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
   char c = ' ';
 
   int size = 0;
-  client.setNoDelay(false);
-  // while(client.connected()) {
+  wifiClient->setNoDelay(false);
   uint16_t httpCode = 0;
-  while (client.connected() || client.available()) {
-    while ((size = client.available()) > 0) {
+  while (wifiClient->connected() || wifiClient->available()) {
+    while ((size = wifiClient->available()) > 0) {
 
       if (isBody) {
         uint16_t len = min(bufLen, size);
-        c = client.readBytes(buf, len);
+        c = wifiClient->readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
           // Serial.print((char)buf[i]);
         }
       } else {
-        String line = client.readStringUntil('\r');
+        String line = wifiClient->readStringUntil('\r');
         Serial.println(line);
         if (line.startsWith("HTTP/1.")) {
           httpCode = line.substring(9, line.indexOf(' ', 9)).toInt();
@@ -121,14 +121,13 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   level = 0;
   isDataCall = true;
   currentParent = "";
-  WiFiClientSecure client = WiFiClientSecure();
   JsonStreamingParser parser;
   parser.setListener(this);
 
   String host = "api.spotify.com";
   const int port = 443;
   String url = "/v1/me/player/" + command;
-  if (!client.connect(host.c_str(), port)) {
+  if (!wifiClient->connect(host.c_str(), port)) {
     Serial.println("connection failed");
     return 0;
   }
@@ -141,10 +140,10 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
                "Connection: close\r\n\r\n";
   // This will send the request to the server
   Serial.println(request);
-  client.print(request);
+  wifiClient->print(request);
 
   int retryCounter = 0;
-  while (!client.available()) {
+  while (!wifiClient->available()) {
     executeCallback();
 
     retryCounter++;
@@ -159,20 +158,19 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   char c = ' ';
 
   int size = 0;
-  client.setNoDelay(false);
-  // while(client.connected()) {
+  wifiClient->setNoDelay(false);
   uint16_t httpCode = 0;
-  while (client.connected() || client.available()) {
-    while ((size = client.available()) > 0) {
+  while (wifiClient->connected() || wifiClient->available()) {
+    while ((size = wifiClient->available()) > 0) {
       if (isBody) {
         uint16_t len = min(bufLen, size);
-        c = client.readBytes(buf, len);
+        c = wifiClient->readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
           // Serial.print((char)buf[i]);
         }
       } else {
-        String line = client.readStringUntil('\r');
+        String line = wifiClient->readStringUntil('\r');
         Serial.println(line);
         if (line.startsWith("HTTP/1.")) {
           httpCode = line.substring(9, line.indexOf(' ', 9)).toInt();
@@ -194,13 +192,16 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   isDataCall = false;
   JsonStreamingParser parser;
   parser.setListener(this);
-  WiFiClientSecure client;
+  
   // https://accounts.spotify.com/api/token
   const char *host = "accounts.spotify.com";
   const int port = 443;
   String url = "/api/token";
-  if (!client.connect(host, port)) {
-    Serial.println("connection failed");
+  wifiClient->setInsecure();
+  wifiClient->connect(host, port);
+  if (!wifiClient->connected()) {
+    Serial.printf("Connection to %s:%d failed; returning.\n", host, port);
+    wifiClient->stop();
     return;
   }
 
@@ -221,39 +222,33 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
                "Connection: close\r\n\r\n" + 
                content;
   Serial.println(request);
-  client.print(request);
+  wifiClient->print(request);
 
-  int retryCounter = 0;
-  while (!client.available()) {
-    executeCallback();
-    retryCounter++;
-    if (retryCounter > 10) {
-      return;
-    }
-    delay(10);
-  }
-
-  int pos = 0;
-  boolean isBody = false;
   char c;
-
-  int size = 0;
-  client.setNoDelay(false);
-  while (client.connected() || client.available()) {
-    while ((size = client.available()) > 0) {
-      c = client.read();
+  boolean isBody = false;
+  unsigned long timeoutMillis = 10000UL;
+  unsigned long startMillis = millis();
+  while (wifiClient->connected() || wifiClient->available()) {
+    if (wifiClient->available()) {
+      if ((millis() - startMillis) > timeoutMillis) {
+        Serial.printf("HTTP timeout after %ds.\n", (timeoutMillis/1000));
+        wifiClient->stop();
+        ESP.restart();
+      }
+      c = wifiClient->read();
+      Serial.print(c);
       if (c == '{' || c == '[') {
         isBody = true;
       }
       if (isBody) {
         parser.parse(c);
-        Serial.print(c);
-      } else {
-        Serial.print(c);
       }
     }
     executeCallback();
+    // give WiFi and TCP/IP libraries a chance to handle pending events
+    yield();
   }
+  wifiClient->stop();
 
   this->data = nullptr;
 }
@@ -284,7 +279,7 @@ String SpotifyClient::startConfigPortal(const String mDnsName) {
 
     oneWayCode = server.arg("code");
     Serial.printf("Code: %s\n", oneWayCode.c_str());
-    String message = "<html><head></head><body>Succesfully authentiated This device with Spotify. Restart your device now</body></html>";
+    String message = "<html><head></head><body>Succesfully authentiated this device with Spotify. Restart your device now</body></html>";
     server.send(200, "text/html", message);
   });
 
@@ -295,7 +290,7 @@ String SpotifyClient::startConfigPortal(const String mDnsName) {
   if (!MDNS.begin(mDnsName)) {
     Serial.println("Error setting up MDNS responder!");
   }
-  Serial.println("mDNS responder started");
+  Serial.println("MDNS responder started");
   Serial.println("Open browser at http://" + mDnsName + ".local");
 
   while (oneWayCode == "") {
@@ -306,6 +301,8 @@ String SpotifyClient::startConfigPortal(const String mDnsName) {
 
   Serial.println("Stopping HTTP server");
   server.stop();
+  Serial.println("Stopping MDNS responder");
+  MDNS.close();
   return oneWayCode;
 }
 

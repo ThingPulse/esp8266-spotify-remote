@@ -27,6 +27,7 @@
 #include <ILI9341_SPI.h>
 #include <FS.h>
 #include <JPEGDecoder.h>
+
 #include "SpotifyClient.h"
 #include "settings.h"
 #include "TouchControllerWS.h"
@@ -51,10 +52,6 @@
 #pragma message(Reminder "Comment out the line with LOAD_SD_LIBRARY /JPEGDecoder/src/User_config.h !")
 #endif
 
-
-const char* host = "api.spotify.com";
-const int httpsPort = 443;
-
 int BUFFER_WIDTH = 240;
 int BUFFER_HEIGHT = 160;
 // Limited to 4 colors due to memory constraints
@@ -66,7 +63,8 @@ TouchControllerWS touchController(&ts);
 ILI9341_SPI tft = ILI9341_SPI(TFT_CS, TFT_DC);
 MiniGrafx gfx = MiniGrafx(&tft, BITS_PER_PIXEL, palette, BUFFER_WIDTH, BUFFER_HEIGHT);
 
-SpotifyClient client(clientId, clientSecret, redirectUri);
+WiFiClientSecure wifiClient;
+SpotifyClient client(clientId, clientSecret, redirectUri, &wifiClient);
 SpotifyData data;
 SpotifyAuth auth;
 
@@ -78,6 +76,7 @@ TS_Point lastTouchPoint;
 uint32_t lastTouchMillis = 0;
 boolean isDownloadingCover = false;
 
+void setClock();
 void drawJPEGFromSpiffs(String filename, MiniGrafx *gfx, int xpos, int ypos, DrawingCallback *drawingCallback);
 void calibrationCallback(int16_t x, int16_t y);
 CalibrationCallback calibration = &calibrationCallback;
@@ -89,8 +88,53 @@ void displayLogo();
 void drawSongInfo();
 DrawingCallback drawSongInfoCallback = &drawSongInfo;
 
+void printFreeHeap(String msg) {
+  Serial.println("*** Memory stats " + msg + " ***");
+  Serial.printf("\tFree heap: %d\n", ESP.getFreeHeap());
+  Serial.printf("\tMax free block size: %d\n", ESP.getMaxFreeBlockSize());
+  Serial.printf("\tHeap fragmentation: %d%\n\n", ESP.getHeapFragmentation());
+}
+
 void setup() {
   Serial.begin(115200);
+  Serial.println("");
+  printFreeHeap("right after setup()");
+
+  Serial.println();
+  Serial.print("connecting to ");
+  Serial.println(ssid);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("WiFi connected at IP address: ");
+  Serial.println(WiFi.localIP());
+
+  printFreeHeap("after WiFi connection");
+
+  setClock();
+
+  // TEST CONNECTION TO SPOTIFY ***************************************************
+  uint32_t freeStackStart = ESP.getFreeContStack();
+  X509List cert(digicertRootCaCert);
+  wifiClient.setTrustAnchors(&cert);
+  const char *host = "accounts.spotify.com";
+  const uint16_t port = 443;
+  wifiClient.connect(host, port);
+  if (wifiClient.connected()) {
+    Serial.println("Connection to Spotify established.");
+  } else {
+    Serial.printf("Connection to %s:%d failed; returning.\n", host, port);
+    return;  
+  }
+  wifiClient.stop();
+  uint32_t freeStackEnd = ESP.getFreeContStack();
+  Serial.printf("Stack used: %d\n\n", freeStackStart - freeStackEnd);
+  printFreeHeap("after socket connection established");
+  // END TEST CONNECTION TO SPOTIFY ***********************************************
 
   pinMode(TFT_LED, OUTPUT);
   digitalWrite(TFT_LED, HIGH);    // HIGH to Turn on;
@@ -103,6 +147,8 @@ void setup() {
   gfx.fillBuffer(MINI_BLACK);
   gfx.commit(0, 160);
   
+  printFreeHeap("after 1st GFX commit");
+  
   boolean mounted = SPIFFS.begin();
   if (!mounted) {
     Serial.println("FS not formatted. Doing that now");
@@ -112,6 +158,8 @@ void setup() {
     Serial.println("FS formatted...");
     SPIFFS.begin();
   }
+
+  printFreeHeap("after SPIFFS mounted");
 
   // init the touch screen
   ts.begin();
@@ -127,19 +175,7 @@ void setup() {
     touchController.saveCalibration();
   }
 
-  Serial.println();
-  Serial.print("connecting to ");
-  Serial.println(ssid);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  printFreeHeap("after touch screen initialized");
 
   String code = "";
   String grantType = "";
@@ -234,6 +270,24 @@ void loop() {
       Serial.println(responseCode);
     }
   }
+}
+
+// Set time via NTP, as required for x.509 validation
+void setClock() {
+  configTime(TIMEZONE, "pool.ntp.org");
+  
+  Serial.print("Waiting for NTP time sync: ");
+  time_t now = time(nullptr);
+  while (now < 8 * 3600 * 2) {
+    delay(500);
+    Serial.print(".");
+    now = time(nullptr);
+  }
+  Serial.println("");
+  struct tm timeinfo;
+  gmtime_r(&now, &timeinfo);
+  Serial.print("Current time: ");
+  Serial.print(asctime(&timeinfo));
 }
 
 void drawSongInfo() {

@@ -1,0 +1,82 @@
+21:42:19.037 -> SDK:2.2.2-dev(38a443e)/Core:2.7.3-3-g2843a5ac=20703003/lwIP:STABLE-2_1_2_RELEASE/glue:1.2-30-g92add50/BearSSL:5c771be
+21:42:19.037 -> 
+21:42:19.037 -> *** Memory stats right after setup() ***
+21:42:19.037 -> 	Free heap: 34184
+21:42:19.037 -> 	Max free block size: 34112
+21:42:19.037 -> 	Heap fragmentation: 1
+21:42:19.037 -> 
+21:42:19.037 -> 
+21:42:19.037 -> connecting to SheDJs
+21:42:19.037 -> scandone
+21:42:19.142 -> scandone
+21:42:19.142 -> state: 0 -> 2 (b0)
+21:42:19.142 -> state: 2 -> 3 (0)
+21:42:19.142 -> state: 3 -> 5 (10)
+21:42:19.142 -> add 0
+21:42:19.142 -> aid 4
+21:42:19.142 -> cnt 
+21:42:19.142 -> 
+21:42:19.142 -> connected with ******, channel 1
+21:42:19.142 -> dhcp client start...
+21:42:19.179 -> ip:192.168.0.53,mask:255.255.255.0,gw:192.168.0.1
+21:42:19.535 -> .
+21:42:19.535 -> WiFi connected
+21:42:19.535 -> IP address: 
+21:42:19.535 -> 192.168.0.53
+21:42:19.535 -> *** Memory stats after WiFi connection ***
+21:42:19.535 -> 	Free heap: 33608
+21:42:19.535 -> 	Max free block size: 32864
+21:42:19.535 -> 	Heap fragmentation: 3
+21:42:19.535 -> 
+21:42:19.535 -> Waiting for NTP time sync: .
+21:42:20.035 -> Current time: Fri Sep 11 19:42:19 2020
+21:42:20.109 -> BSSL:_connectSSL: start connection
+21:42:20.844 -> BSSL:Connected!
+21:42:20.844 -> Connection to Spotify established.
+21:42:20.844 -> Stack used: 1200
+21:42:20.844 -> 
+21:42:20.844 -> *** Memory stats after socket connection established ***
+21:42:20.844 -> 	Free heap: 31336
+21:42:20.844 -> 	Max free block size: 31200
+21:42:20.844 -> 	Heap fragmentation: 1
+21:42:20.844 -> 
+21:42:21.059 -> *** Memory stats after 1st GFX commit ***
+21:42:21.059 -> 	Free heap: 21800
+21:42:21.059 -> 	Max free block size: 21584
+21:42:21.059 -> 	Heap fragmentation: 1
+21:42:21.059 -> 
+21:42:21.416 -> *** Memory stats after SPIFFS mounted ***
+21:42:21.416 -> 	Free heap: 19600
+21:42:21.416 -> 	Max free block size: 19384
+21:42:21.416 -> 	Heap fragmentation: 2
+21:42:21.416 -> 
+21:42:21.416 -> PIFFS opened: 
+21:42:21.416 -> *** Memory stats after touch screen initialized ***
+21:42:21.416 -> 	Free heap: 19600
+21:42:21.416 -> 	Max free block size: 19384
+21:42:21.416 -> 	Heap fragmentation: 2
+21:42:21.416 -> 
+21:42:21.416 -> Loading config
+21:42:21.772 -> Failed to open config file
+21:42:21.772 -> No refresh token found. Requesting through browser
+21:42:21.809 -> Starting config portal
+21:42:21.809 -> HTTP server started
+21:42:21.809 -> MDNS responder started
+21:42:21.809 -> Open browser at http://esp8266.local
+21:42:29.125 -> pm open,type:2 0
+21:45:48.142 -> Serving resource '/'
+21:45:48.142 -> Sending HTTP 302 to Spotify
+21:45:48.318 -> Code: ********************************************************************************** 
+21:45:48.318 -> Stopping HTTP server
+21:45:48.318 -> Stopping MDNS responder
+21:45:48.358 -> BSSL:_connectSSL: start connection
+21:45:48.358 -> BSSL:_connectSSL: OOM error
+21:45:48.358 -> Connection to accounts.spotify.com:443 failed; returning.
+21:45:48.358 -> Refresh token: 
+21:45:48.358 -> Access Token: 
+21:45:48.358 -> BSSL:_connectSSL: start connection
+21:45:48.358 -> BSSL:_connectSSL: OOM error
+21:45:48.358 -> connection failed
+21:45:48.358 -> HREF: 
+21:45:48.358 -> --------Response Code: 0
+21:45:48.358 -> --------Free mem: 18424

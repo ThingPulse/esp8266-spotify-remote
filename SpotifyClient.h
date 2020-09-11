@@ -26,6 +26,7 @@
 #include <JsonListener.h>
 #include <JsonStreamingParser.h>
 #include <ESP8266WebServer.h>
+#include <WiFiClientSecure.h>
 #include <FS.h>
 #include <base64.h>
 
@@ -139,6 +140,7 @@ class SpotifyClient: public JsonListener {
     String clientId;
     String clientSecret;
     String redirectUri;
+    WiFiClientSecure *wifiClient;
     ESP8266WebServer server;
   
     String getRootPath();
@@ -146,7 +148,7 @@ class SpotifyClient: public JsonListener {
 
   public:
     
-    SpotifyClient(String clientId, String clientSecret, String redirectUri);
+    SpotifyClient(String clientId, String clientSecret, String redirectUri, WiFiClientSecure *wifiClient);
     
     uint16_t update(SpotifyData *data, SpotifyAuth *auth);
 
