@@ -215,7 +215,7 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
     codeParam = "refresh_token"; 
   }
   String authorizationRaw = clientId + ":" + clientSecret;
-  String authorization = base64::encode(authorizationRaw, false);
+  String authorization = base64::encode(authorizationRaw);
   // This will send the request to the server
   String content = "grant_type=" + grantType + "&" + codeParam + "=" + code + "&redirect_uri=" + redirectUri;
   String request = String("POST ") + url + " HTTP/1.1\r\n" +
