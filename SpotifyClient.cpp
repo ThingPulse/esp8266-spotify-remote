@@ -21,14 +21,11 @@
  SOFTWARE.
  */
 
-#pragma once
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266mDNS.h>
 
 #include "SpotifyClient.h"
-
-#define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 
 SpotifyClient::SpotifyClient(String clientId, String clientSecret, String redirectUri, WiFiClientSecure *wifiClient) {
   this->clientId = clientId;
@@ -84,7 +81,7 @@ uint16_t SpotifyClient::update(SpotifyData *data, SpotifyAuth *auth) {
     while ((size = wifiClient->available()) > 0) {
 
       if (isBody) {
-        uint16_t len = min(bufLen, size);
+        uint16_t len = _min(bufLen, size);
         c = wifiClient->readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
@@ -163,7 +160,7 @@ uint16_t SpotifyClient::playerCommand(SpotifyAuth *auth, String method, String c
   while (wifiClient->connected() || wifiClient->available()) {
     while ((size = wifiClient->available()) > 0) {
       if (isBody) {
-        uint16_t len = min(bufLen, size);
+        uint16_t len = _min(bufLen, size);
         c = wifiClient->readBytes(buf, len);
         for (uint16_t i = 0; i < len; i++) {
           parser.parse(buf[i]);
@@ -442,7 +439,7 @@ void SpotifyClient::downloadFile(String url, String filename) {
   Serial.print("[HTTP] begin...\n");
 
   // configure server and url
-  http.begin(url);
+  http.begin(*wifiClient, url);
 
   Serial.print("[HTTP] GET...\n");
   // start connection and send HTTP header

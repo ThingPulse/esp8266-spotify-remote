@@ -299,7 +299,7 @@ void drawSongInfo() {
   if (data.isPlaying) {
     timeSinceUpdate = millis() - lastUpdate;
   }
-  drawProgress(min(data.progressMs + timeSinceUpdate, data.durationMs), data.durationMs, data.title, data.artistName, data.isPlaying, data.isPlayerActive);
+  drawProgress(_min(data.progressMs + timeSinceUpdate, data.durationMs), data.durationMs, data.title, data.artistName, data.isPlaying, data.isPlayerActive);
 }
 
 void drawProgress(uint64_t progressMs, uint64_t durationMs, String songTitle, String artistName, boolean isPlaying, boolean isPlayerActive) {
