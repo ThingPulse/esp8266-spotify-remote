@@ -23,6 +23,10 @@
 
 #include <TZ.h>
 
+// ****************************************************************************
+// User settings
+// ****************************************************************************
+
 // WiFi settings
 const char* ssid = "yourssid";
 const char* password = "yourpassw0rd";
@@ -37,6 +41,10 @@ String redirectUri = "http%3A%2F%2F" + espotifierNodeName + ".local%2Fcallback%2
 
 // Pick a timezone at https://github.com/esp8266/Arduino/blob/master/cores/esp8266/TZ.h#L389
 #define TIMEZONE TZ_Europe_Zurich
+
+// ****************************************************************************
+// System settings - do not modify unless you understand what you are doing!
+// ****************************************************************************
 
 // DigiCert Global Root CA exported from Firefox as x509.pem format
 static const char digicertRootCaCert[] PROGMEM = R"EOF(
@@ -87,3 +95,5 @@ uint16_t palette[] = {ILI9341_BLACK, // 0
                       ILI9341_YELLOW, // 2
                       0x840F
                       }; //3
+
+#define MEMORY_DEBUG

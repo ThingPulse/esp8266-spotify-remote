@@ -194,9 +194,7 @@ void SpotifyClient::getToken(SpotifyAuth *auth, String grantType, String code) {
   const char *host = "accounts.spotify.com";
   const int port = 443;
   String url = "/api/token";
-  wifiClient->setInsecure();
-  wifiClient->connect(host, port);
-  if (!wifiClient->connected()) {
+  if (!wifiClient->connect(host, port)) {
     Serial.printf("Connection to %s:%d failed; returning.\n", host, port);
     wifiClient->stop();
     return;

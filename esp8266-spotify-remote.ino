@@ -89,16 +89,19 @@ void drawSongInfo();
 DrawingCallback drawSongInfoCallback = &drawSongInfo;
 
 void printFreeHeap(String msg) {
+  #ifdef MEMORY_DEBUG
   Serial.println("*** Memory stats " + msg + " ***");
   Serial.printf("\tFree heap: %d\n", ESP.getFreeHeap());
   Serial.printf("\tMax free block size: %d\n", ESP.getMaxFreeBlockSize());
   Serial.printf("\tHeap fragmentation: %d%\n\n", ESP.getHeapFragmentation());
+  #endif
 }
 
 void setup() {
   Serial.begin(115200);
   Serial.println("");
   printFreeHeap("right after setup()");
+  wifiClient.setBufferSizes(512, 512);
 
   Serial.println();
   Serial.print("connecting to ");
@@ -116,25 +119,6 @@ void setup() {
   printFreeHeap("after WiFi connection");
 
   setClock();
-
-  // TEST CONNECTION TO SPOTIFY ***************************************************
-  uint32_t freeStackStart = ESP.getFreeContStack();
-  X509List cert(digicertRootCaCert);
-  wifiClient.setTrustAnchors(&cert);
-  const char *host = "accounts.spotify.com";
-  const uint16_t port = 443;
-  wifiClient.connect(host, port);
-  if (wifiClient.connected()) {
-    Serial.println("Connection to Spotify established.");
-  } else {
-    Serial.printf("Connection to %s:%d failed; returning.\n", host, port);
-    return;  
-  }
-  wifiClient.stop();
-  uint32_t freeStackEnd = ESP.getFreeContStack();
-  Serial.printf("Stack used: %d\n\n", freeStackStart - freeStackEnd);
-  printFreeHeap("after socket connection established");
-  // END TEST CONNECTION TO SPOTIFY ***********************************************
 
   pinMode(TFT_LED, OUTPUT);
   digitalWrite(TFT_LED, HIGH);    // HIGH to Turn on;
@@ -286,7 +270,7 @@ void setClock() {
   Serial.println("");
   struct tm timeinfo;
   gmtime_r(&now, &timeinfo);
-  Serial.print("Current time: ");
+  Serial.print("Current time UTC: ");
   Serial.print(asctime(&timeinfo));
 }
 
